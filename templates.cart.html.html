@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Shopping Cart</h1>
+{% if cart_items %}
+    {% for item in cart_items %}
+    <div class="card mb-2">
+        <div class="card-body">
+            <h5>{{ item.products.name }}</h5>
+            <p>Price: ${{ "%.2f"|format(item.products.price) }} x {{ item.quantity }} = ${{ "%.2f"|format(item.products.price * item.quantity) }}</p>
+            <form method="POST" action="{{ url_for('update_cart') }}" class="d-inline">
+                <input type="hidden" name="item_id" value="{{ item.id }}">
+                <input type="number" name="quantity" value="{{ item.quantity }}" min="0" class="form-control w-25 d-inline">
+                <button type="submit" class="btn btn-warning btn-sm">Update</button>
+            </form>
+            <a href="{{ url_for('remove_from_cart', item_id=item.id) }}" class="btn btn-danger btn-sm">Remove</a>
+        </div>
+    </div>
+    {% endfor %}
+    <h3>Total: ${{ "%.2f"|format(total) }}</h3>
+    <a href="{{ url_for('checkout') }}" class="btn btn-success">Checkout</a>
+{% else %}
+    <p>Your cart is empty.</p>
+{% endif %}
+{% endblock %}
